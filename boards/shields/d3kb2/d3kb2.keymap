@@ -27,15 +27,35 @@
 
 / {
 
-    behaviors {
-        mcap: behavior_mo_tog {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            flavor = "tap-preferred";
-            tapping-term-ms = <200>;
-            bindings = <&kp>, <&caps_word>;
-        };
+  trackball_listener_mmv {
+          compatible = "zmk,input-behavior-listener";
+          device = <&trackball>;
+          layers = <LDEF>;
+          evt-type = <INPUT_EV_REL>;
+          x-input-code = <INPUT_REL_X>;
+          y-input-code = <INPUT_REL_Y>;
+          scale-multiplier = <1>;
+          scale-divisor = <1>;
+          /* bind a behavior to auto activate MSK layer for &mkp */
+          //bindings = <&ib_tog_layer LMSK>;
+  };
+
+
+    sensors: sensors {
+        compatible = "zmk,keymap-sensors";
+        sensors = <&encoder>;
+        triggers-per-rotation = <18>;
     };
+
+  behaviors {
+      mcap: behavior_mo_tog {
+          compatible = "zmk,behavior-hold-tap";
+          #binding-cells = <2>;
+          flavor = "tap-preferred";
+          tapping-term-ms = <200>;
+          bindings = <&kp>, <&caps_word>;
+      };
+  };
 
     combos{
         compatible = "zmk,combos";
@@ -100,48 +120,53 @@
 
         layer_default {
             bindings = <
-            &mt LGUI Q  &kp W       &kp U       &kp F       &kp MINUS           &kp K      &kp L       &kp R       &kp Y      &kp P        
-            &mt LCTRL E &kp I       &kp A       &kp O       &kp MINUS           &kp K      &kp T       &kp N       &kp S       &kp H       
-            &mt LSHFT Z &mt LALT X  &kp C       &kp V       &kp PRCNT           &kp G      &kp D       &kp M       &kp J       &mt LSHFT B 
-                                    &none       &lt 3 TAB   &mt LCTRL SPACE     &lt 1 SPACE &mcap LALT  0 &none
+                     &kp W &kp U &kp F  &kp Q           &kp K      &kp L       &kp R       &kp Y      
+        &kp Q  &kp E &kp I &kp A &kp O  &kp MINUS       &kp G      &kp T       &kp N       &kp S      &kp H       &kp P        
+               &kp Z &kp X &kp C &kp V                             &kp D       &kp M       &kp J      &kp B 
+                                    &kp TAB   &kp SPACE     &kp SPACE &kp BSPC
+                     &kp U                 &kp U
+                &kp L       &kp R    &kp L &kp C &kp R
+                     &kp D                 &kp D
+
             >;
+            sensor-bindings = <&inc_dec_kp L R>;
         };
 
-        layer_nav {
-            bindings = <
-            &kp LGUI     &kp N4      &kp N5      &kp N6       &mkp MB4          &kp K_APP  &kp PG_DN     &kp UP        &kp PG_UP    &kp LGUI    
-            &mt LCTRL N0 &kp N1      &kp N2      &kp N3       &mkp MB4          &kp K_APP  &kp LEFT      &kp DOWN      &kp RIGHT    &kp LALT
-            &mt LSHFT N0 &mt LALT N7 &kp N8      &kp N9       &mkp MB5          &kp K_APP  &kp LC(PG_UP) &kp LC(PG_DN) &kp HOME     &kp END    
-                                     &none       &lt 3 TAB   &kp SPACE          &trans      &trans       &none
-            >;
-        };
+        //layer_nav {
+        //    bindings = <
+        //    &kp LGUI     &kp N4      &kp N5      &kp N6       &mkp MB4          &kp K_APP  &kp PG_DN     &kp UP        &kp PG_UP    &kp LGUI    
+        //    &mt LCTRL N0 &kp N1      &kp N2      &kp N3       &mkp MB4          &kp K_APP  &kp LEFT      &kp DOWN      &kp RIGHT    &kp LALT
+        //    &mt LSHFT N0 &mt LALT N7 &kp N8      &kp N9       &mkp MB5          &kp K_APP  &kp LC(PG_UP) &kp LC(PG_DN) &kp HOME     &kp END    
+        //                             &none       &lt 3 TAB   &kp SPACE          &trans      &trans       &none
+        //    >;
+        //};
 
-        layer_fun {
-            bindings = <
-            &trans       &kp F11     &kp F12     &kp LS(F5)   &kp F5             &kp DOT    &kp N7      &kp N8      &kp N9     &kp MINUS  
-            &mt LCTRL F1 &kp F2      &kp F3      &kp F4       &kp F5             &kp DOT    &kp N4      &kp N5      &kp N6      &kp N0      
-            &mt LSHFT F6 &mt LALT F7 &kp F8      &kp F9       &kp F10            &kp COMMA  &kp N1      &kp N2      &kp N3      &kp N0      
-                                     &none       &lt 3 TAB   &kp SPACE           &kp SPACE  &kp LALT    &none
-            >;
-        };
+        //layer_fun {
+        //    bindings = <
+        //    &trans       &kp F11     &kp F12     &kp LS(F5)   &kp F5             &kp DOT    &kp N7      &kp N8      &kp N9     &kp MINUS  
+        //    &mt LCTRL F1 &kp F2      &kp F3      &kp F4       &kp F5             &kp DOT    &kp N4      &kp N5      &kp N6      &kp N0      
+        //    &mt LSHFT F6 &mt LALT F7 &kp F8      &kp F9       &kp F10            &kp COMMA  &kp N1      &kp N2      &kp N3      &kp N0      
+        //                             &none       &lt 3 TAB   &kp SPACE           &kp SPACE  &kp LALT    &none
+        //    >;
+        //};
 
-        layer_sym {
-            bindings = <
-            &kp TILDE      &kp AT   &kp HASH    &kp DLLR    &kp LBRC            &kp RBRC    &kp AMPS    &kp STAR    &kp UNDER   &kp PLUS 
-            &mt LCTRL EXCL &kp LBKT &kp LPAR    &kp COLON   &kp LBRC            &kp RBRC    &kp FSLH    &kp RPAR    &kp RBKT    &mt LCTRL EQUAL 
-            &kp GRAVE      &kp LT   &kp MINUS   &kp GT      &kp PIPE            &kp CARET   &kp QMARK   &kp DQT     &kp SQT     &kp BSLH    
-                                    &none       &trans      &trans              &kp SPACE   &kp LALT    &none
-            >;
-        };
+        //layer_sym {
+        //    bindings = <
+        //    &kp TILDE      &kp AT   &kp HASH    &kp DLLR    &kp LBRC            &kp RBRC    &kp AMPS    &kp STAR    &kp UNDER   &kp PLUS 
+        //    &mt LCTRL EXCL &kp LBKT &kp LPAR    &kp COLON   &kp LBRC            &kp RBRC    &kp FSLH    &kp RPAR    &kp RBKT    &mt LCTRL EQUAL 
+        //    &kp GRAVE      &kp LT   &kp MINUS   &kp GT      &kp PIPE            &kp CARET   &kp QMARK   &kp DQT     &kp SQT     &kp BSLH    
+        //                            &none       &trans      &trans              &kp SPACE   &kp LALT    &none
+        //    >;
+        //};
 
-        layer_adj {
-            bindings = <
-            &bootloader  &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2  &none            &none    &trans      &trans      &trans      &bootloader
-            &out OUT_BLE &bt BT_SEL 3 &bt BT_SEL 4 &trans        &bt BT_CLR       &trans   &trans      &trans      &trans      &trans 
-            &out OUT_USB &trans     &trans      &trans           &bt BT_CLR       &trans   &trans      &trans      &trans      &trans      
-                                    &none       &trans      &trans              &trans     &trans     &none
-            >;
-        };
+        //layer_adj {
+        //    bindings = <
+        //    &bootloader  &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2  &none            &none    &trans      &trans      &trans      &bootloader
+        //    &out OUT_BLE &bt BT_SEL 3 &bt BT_SEL 4 &trans        &bt BT_CLR       &trans   &trans      &trans      &trans      &trans 
+        //    &out OUT_USB &trans     &trans      &trans           &bt BT_CLR       &trans   &trans      &trans      &trans      &trans      
+        //                            &none       &trans      &trans              &trans     &trans     &none
+        //    >;
+        //};
     };
 };
 
